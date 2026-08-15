@@ -67,7 +67,7 @@ ssh-log-analyzer/
 │   └── ...
 ├── README.md
 └── ...
-
+```
 ## 🚀 Futures mises à jour
 
 Le projet est développé progressivement. Plusieurs évolutions sont prévues afin d'améliorer sa robustesse, ses fonctionnalités et sa facilité d'utilisation.
