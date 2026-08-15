@@ -1,5 +1,5 @@
 
-f = open("Template/demo.txt")
+f = open("Template/demo_v8_scenarios.txt")
 x = f.read()
 lines = x.splitlines()
 
@@ -7,12 +7,11 @@ failed = x.count("Failed")
 invalid = x.count("Invalid user")
 accepted = x.count("Accepted")
 total = failed + invalid + accepted
-threshold = 4
 ips = {}
 
 for words in lines:
     y = words.split()
-    if "Failed" in words:
+    if "Accepted" in words or "Failed" in words:
         ip = y[10]
         types = y[5]
     elif "Invalid user" in words:
@@ -23,6 +22,7 @@ for words in lines:
 
     if ip not in ips:
         ips[ip] = {
+        "Accepted": 0,    
         "Failed": 0,
         "Invalid user": 0
     }
@@ -31,9 +31,8 @@ for words in lines:
         ips[ip]["Failed"] = ips[ip]["Failed"] + 1
     elif types == "Invalid user":
         ips[ip]["Invalid user"] = ips[ip]["Invalid user"] + 1
-
-
-##################################################
+    elif types == "Accepted":
+        ips[ip]["Accepted"] = ips[ip]["Accepted"] + 1
 
 print("==========================================")
 print("          SSH LOG ANALYZER                ")
@@ -55,18 +54,30 @@ print()
 
 for ip in ips:
     result_echec = ips[ip]["Failed"] + ips[ip]["Invalid user"]
-    failure_threshold = result_echec >= threshold
-    if failure_threshold:
+    result_types = ips[ip]["Failed"] + ips[ip]["Invalid user"] + ips[ip]["Accepted"]
+    failure_rate = result_echec / result_types
+    
+    if failure_rate <= 1/3:
         print("IP :", ip)
         print("Failed :", ips[ip]["Failed"])
         print("Invalid user :", ips[ip]["Invalid user"])
-        print("Total :", result_echec)
-        print(" 🚨 SUSPECTE")
+        print("Accepted :", ips[ip]["Accepted"])
+        print("Total :", result_types)
+        print("🟢 Neutre")
         print()
-    else:
+    elif failure_rate > 1/3 and failure_rate <= 2/3:
         print("IP :", ip)
         print("Failed :", ips[ip]["Failed"])
         print("Invalid user :", ips[ip]["Invalid user"])
-        print("Total :", result_echec)
+        print("Accepted :", ips[ip]["Accepted"])
+        print("Total :", result_types)
+        print("🟠 À surveiller")
         print()
-        
+    elif failure_rate > 2/3:
+        print("🚨 IP :", ip)
+        print("Failed :", ips[ip]["Failed"])
+        print("Invalid user :", ips[ip]["Invalid user"])
+        print("Accepted :", ips[ip]["Accepted"])
+        print("Total :", result_types)
+        print("🔴 Suspect")
+        print()
