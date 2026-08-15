@@ -1,1 +1,0 @@
-Aug 14 08:14:39 server sshd[1223]: Failed password for admin from 192.168.1.50 port 42174 ssh2

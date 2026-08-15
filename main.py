@@ -1,5 +1,5 @@
 
-f = open("Template/demo_v8_scenarios.txt")
+f = open("Logs/demo.log")
 x = f.read()
 lines = x.splitlines()
 
